@@ -47,28 +47,35 @@ def derive_code(otp: Text, sequence: List[Text]) -> Text:
             code.append(dict_sequence[i][int(c)]) 
     return ''.join(code)
 
-def clean(dicto):
-    return str(dicto).replace("{"," ").replace("}"," ").replace(',', ' | ')
+def generate() -> List[Text]:
+    """Generate a random sequence.
+    
+    Returns:
+        A sequence
+    """
+    
+    p = [10, 10, 6]
+    random.shuffle(p)
+    c = list(string.ascii_uppercase)
+    random.shuffle(c)
 
-def main():
+    f = lambda x, y: dict(zip(list(range(x)), y))
+    clean = lambda x: str(x).replace("{"," ").replace("}"," ").replace(',', ' | ')
+
     sequence = []
-    
-    alphabets = list(string.ascii_uppercase)
-    part = [10, 10, 6]
-    random.shuffle(part)
-    random.shuffle(alphabets)
-    
-    sequence.append(clean(dict(zip(list(range(0,part[0])),alphabets[:part[0]]))))
-    sequence.append(clean(dict(zip(list(range(0,part[1])),alphabets[part[0]:part[0] + part[1]]))))
-    sequence.append(clean(dict(zip(list(range(0,part[2])),alphabets[part[1]:part[1] + part[2]]))))
-        
-    return sequence, part
+    sequence.append(clean(f(p[0], c[: p[0]])))
+    sequence.append(clean(f(p[1], c[p[0]: p[0]+p[1]])))
+    sequence.append(clean(f(p[2], c[p[0]+p[1]:])))
 
-def check_sequence(sequence: Text) -> bool:
+    return sequence
+
+def check(sequence: Text) -> bool:
     """Check if the sequence exists in the USERS table.
     
     Args:
         sequence: User's sequence.
+    Returns:
+        True if sequence exists in the database else False.
     """
 
     try:
@@ -79,7 +86,7 @@ def check_sequence(sequence: Text) -> bool:
                return True
         return False
     except BaseException:
-        logger.error("Error happened which executing a SQL query!", exc_info=True)
+        logger.error("Error happened while executing a SQL query!", exc_info=True)
 
 
 

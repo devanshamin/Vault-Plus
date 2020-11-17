@@ -18,7 +18,7 @@ def users_table() -> None:
         ''')  
 
 def insert_user(sequence: Text, uid: Text) -> None:
-    """Insert an user into the USERS table.
+    """Insert a user into the USERS table.
     
     Args:
         sequence: User's sequence.

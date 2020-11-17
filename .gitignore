@@ -7,4 +7,3 @@ environment.txt
 credentials.json
 token.json
 utils/email.py
-src
