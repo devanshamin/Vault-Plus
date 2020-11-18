@@ -6,4 +6,6 @@ improvements.txt
 environment.txt
 credentials.json
 token.json
-utils/email.py
+admin/
+vaultplus/
+users/

@@ -12,4 +12,4 @@ def id_(email: Text) -> Text:
     domain_name = domain_name.split('.')[0]
     for char in string.punctuation:
         username = username.replace(char, "")
-    return f"_{username}_{domain_name}"
+    return f"_{username}{domain_name}"

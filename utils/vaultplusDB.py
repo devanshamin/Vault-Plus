@@ -6,7 +6,7 @@ import sqlite3
 from utils.logger import logger
 from utils.encryption import AES_decrypt
 
-vp_path = Path(Path.cwd(), "vaultplus")
+vp_path = Path("vaultplus")
 if not vp_path.exists():
     vp_path.mkdir()
 conn = sqlite3.connect(Path(vp_path, 'VaultPlus.db'))
@@ -40,7 +40,7 @@ def uid_table(uid: Text) -> None:
     """
     conn.execute('''CREATE TABLE IF NOT EXISTS {}
                     (Service TEXT PRIMARY KEY,
-                     Password TEXT);'''.format(uid))
+                     Password TEXT)'''.format(uid))
 
 def check_backupcode(code: Text) -> bool:
     """Check if the backup code exists in the USERS table.
@@ -52,8 +52,25 @@ def check_backupcode(code: Text) -> bool:
     """
     try:
         cursor = conn.execute("SELECT BackupCode FROM USERS")
+        plain = ''
         for row in cursor:
             plain = AES_decrypt(row[0])
         return code in plain.split('-')
     except BaseException:
         logger.error("Error happened while executing a SQL query!", exc_info=True)
+
+def verify_email(email: Text) -> bool:
+    """Verify if user's email address exists in the database.
+    
+    Args:
+        email: User's email address.
+    Returns:
+        Presence of email address in the database.
+    """
+    try:
+        cursor = conn.execute(f'SELECT * FROM USERS WHERE Email ="{email}"')
+        for r in cursor: 
+            return True if r[0] else False
+    except:
+        logger.error("Error happened while executing a SQL query!", exc_info=True)
+        return False

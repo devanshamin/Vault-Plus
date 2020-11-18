@@ -9,8 +9,9 @@ from utils.sequence import generate, check
 from utils.encryption import hex_key, AES_encrypt
 
 class Registration(object):
+    """New user registration module."""
 
-    def __init__(self, email, password):
+    def __init__(self, email: Text, password: Text):
         self.email = email
         self.password = password
         self.uid = id_(self.email)
@@ -32,16 +33,15 @@ class Registration(object):
         """
 
         adminDB.users_table()
-
         while True:
-            sequence = str(generate())
-            if not check(sequence):
-                adminDB.insert_user(sequence, self.uid[1:])
+            sequence = generate()
+            if not check(str(sequence)):
+                adminDB.insert_user(str(sequence), self.uid[1:])
                 break
 
-        dir_name = self.uid[1:]
-        if not Path("..", dir_name).exists():
-            Path("..", dir_name).mkdir()
+        self.dir_name = Path("users", self.uid[1:])
+        if not self.dir_name.exists():
+            self.dir_name.mkdir(parents=True)
 
         pdf = PDF()
         pdf.set_title("Sequence")
@@ -51,10 +51,10 @@ class Registration(object):
         pdf.print_chapter(2, sequence[1])
         pdf.print_chapter(3, sequence[2])
         pdf_name = "Unencrypted_Sequence.pdf"
-        pdf.output(pdf_name, "F")
-        encrypt_pdf(self.password, Path(dir_name, pdf_name))
+        pdf.output(Path(self.dir_name, pdf_name), "F")
+        encrypt_pdf(self.password, Path(self.dir_name, pdf_name))
 
-        return sequence
+        return str(sequence)
 
     def backupcode(self) -> Text:
         """Generate backup codes for the user.
@@ -75,11 +75,8 @@ class Registration(object):
                 bcode.append(str(code))
                 counter += 1
 
-        text = """Keep these backup codes somewhere safe but accessible.\n\n{}
-                \nEach backup code can be used once. \nAfter use of each backup code, a new backup 
-                code is automatically generated and is available in the password manager.
-                """.format('\n'.join(bcode)) 
-        Path(vaultplusDB.vp_path, f"Backup codes({self.uid}).txt").write_text(text)
+        text = "Keep these backup codes somewhere safe but accessible.\n\n{}\n\nEach backup code can be used once.\nAfter use of each backup code, a new backup code is automatically generated and is available inside the password manager.".format('\n'.join(bcode)) 
+        Path(self.dir_name, "BackupCodes.txt").write_text(text)
 
         return '-'.join(bcode)
         

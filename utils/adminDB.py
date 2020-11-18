@@ -3,7 +3,7 @@ from typing import Text, List
 
 import sqlite3
 
-admin_path = Path("..", "admin")
+admin_path = Path("admin")
 if not admin_path.exists():
     admin_path.mkdir()
 conn = sqlite3.connect(Path(admin_path, "Admin.db"))
