@@ -1,6 +1,9 @@
+import json
+import smtplib
 from typing import Text
-
-import ezgmail
+from pathlib import Path
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 from utils.logger import logger
 
@@ -12,10 +15,28 @@ def email_otp(otp: Text, receiver_email: Text) -> None:
         receiver_email: Receiver's email address.
     """
 
+    config = json.loads(Path("config.json").read_text())
+    sender_email = config["email"]
+    password = config["password"]
+    message = MIMEMultipart()
+    message['Subject'] = "One Time Password (OTP)"
+    message['From'] = sender_email
+    message['To'] = receiver_email
     html = """\
-        <p><font size="10"> Your OTP is <b style="color:blue;">{}</b> </font</p>
+        <html>
+        <body>
+        <p><font size="15"> Your code is <b>{}</b> </font</p>
+        </body>
+        </html>
         """.format(otp)
+    part = MIMEText(html, "html")
+    message.attach(part)
     try:
-        ezgmail.send(receiver_email, "One Time Password (OTP)", html, mimeSubtype='html')
+        s = smtplib.SMTP("smtp.gmail.com", 587)
+        s.starttls()
+        s.login(sender_email, password)
+        text = message.as_string()
+        s.sendmail(sender_email, receiver_email, text)
+        s.quit()
     except:
         logger.error("Error happened while sending an email!", exc_info=True)

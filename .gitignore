@@ -4,8 +4,7 @@ logs/
 tester.py
 improvements.txt
 environment.txt
-credentials.json
-token.json
 admin/
 vaultplus/
 users/
+config.json

@@ -1,17 +1,18 @@
-import sys
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 class PasswordRequirements(object):
     """Display GUI for the password requirements."""
+
     def setupUi(self, Form: QtWidgets.QWidget) -> None:
-        """Setup user interface for Qt Widget.
+        """Creates the widget objects in the proper containers and assigns the proper object names to them.
         
         Args:
             Form: Object of Qt Widget.
         """
+
         Form.setObjectName("Form")
         Form.setFixedSize(301, 230)
+        Form.move(130, 170)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/newPrefix/new.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Form.setWindowIcon(icon)
@@ -27,7 +28,6 @@ class PasswordRequirements(object):
             "border-radius:15px\n"
             "}\n"
             "\n"
-            ""
             )
         self.textBrowser_2 = QtWidgets.QTextBrowser(Form)
         self.textBrowser_2.setGeometry(QtCore.QRect(10, 10, 281, 211))
@@ -38,6 +38,12 @@ class PasswordRequirements(object):
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form: QtWidgets.QWidget) -> None:
+        """Sets the text and titles of the widgets.
+        
+         Args:
+            Form: Object of Qt Widget.
+        """
+
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Vault Plus "))
         self.textBrowser_2.setHtml(
@@ -57,12 +63,3 @@ class PasswordRequirements(object):
                 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'century gothic\'; font-size:7.8pt;\"><br /></p></body></html>"
                 )
             )
-
-if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-    Form = QtWidgets.QWidget()
-    ui = PasswordRequirements()
-    ui.setupUi(Form)
-    Form.show()
-    sys.exit(app.exec_())
-

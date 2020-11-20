@@ -6,6 +6,8 @@ def id_(email: Text) -> Text:
     
     Args:
         email: User's email address.
+    Returns:
+        User id.
     """
 
     username, domain_name = email.split("@")

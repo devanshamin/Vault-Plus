@@ -3,8 +3,9 @@ from typing import Text, List
 
 import sqlite3
 
+from utils.user_id import id_
 from utils.logger import logger
-from utils.encryption import AES_decrypt
+from utils.encryption import hex_key, AES_decrypt
 
 vp_path = Path("vaultplus")
 if not vp_path.exists():
@@ -74,3 +75,38 @@ def verify_email(email: Text) -> bool:
     except:
         logger.error("Error happened while executing a SQL query!", exc_info=True)
         return False
+
+def validate_mp(email: Text, mp: Text) -> bool:
+    """Validate if the master password entered by the user matches with the password in the database.
+    
+    Args:
+        email: User's email address.
+        mp: User's master password.
+    Returns:
+        True if password matches else False.
+    """
+
+    hashed_mp = hex_key(id_(email), mp)
+    try:
+        cursor = conn.execute(f'SELECT Password FROM USERS WHERE Email ="{email}"')
+        for row in cursor:
+            return hashed_mp == row[0]
+    except:
+        logger.error("Error happened while executing a SQL query!", exc_info=True)
+        return False
+
+def fetch_sequence(email: Text) -> List[Text]:
+    """Fetch the user's sequence from the database.
+    
+    Args:
+        email: User's email address.
+    Returns:
+        The sequence.
+    """
+    try:
+        cursor = conn.execute(f'SELECT Sequence FROM USERS WHERE Email ="{email}"')
+        for row in cursor:
+            seq_cipher = row[0]
+        return AES_decrypt(seq_cipher)
+    except:
+        logger.error("Error happened while executing a SQL query!", exc_info=True)

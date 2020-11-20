@@ -1,7 +1,7 @@
-import ast
 import string
 import random
 from pathlib import Path
+from ast import literal_eval
 from typing import Text, List
 
 from utils.logger import logger
@@ -38,7 +38,7 @@ def derive_code(otp: Text, sequence: List[Text]) -> Text:
     dict_sequence = []
     for s in sequence:
         s = "{" + s.replace(" | ",",") + "}"
-        dict_sequence.append(ast.literal_eval(s))
+        dict_sequence.append(literal_eval(s))
 
     code = []
     pieces = otp.split('-')
