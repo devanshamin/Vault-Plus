@@ -8,11 +8,10 @@ from PyQt5.QtWidgets import (QWidget, QToolButton, QLineEdit, QPushButton,
 
 import src.images
 from utils.logger import logger
-from utils.vaultplusDB import fetch_sequence
-from utils.threading_ import threads_start, verify, stop_execution
+from utils.vaultplusDB import validate_backupcode
 
-class EnterCode(object):
-    """Display enter code GUI to the user."""
+class EnterBackupCode(object):
+    """Display enter backup code GUI to the user."""
 
     def setupUi(self, Form: QWidget) -> None:
         """Creates the widget objects in the proper containers and assigns the proper object names to them.
@@ -21,31 +20,23 @@ class EnterCode(object):
             Form: Object of QWidget.
         """
 
+        self.Form = Form
         Form.setObjectName("Form")
         Form.setEnabled(True)
-        Form.setFixedSize(342, 403)
-        Form.setMaximumSize(QtCore.QSize(374, 419))
+        Form.setFixedSize(343, 404)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/newPrefix/new.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Form.setWindowIcon(icon)
         Form.setStyleSheet(
             "*{\n"
             "font-family:Calibri;\n"
-            "font-size:20px;\n"
+            "font-size:20px;\n" 
             "}\n"
             "\n"
             "QFrame\n"
             "{\n"
             "background: rgba(0,0,0,0.8);\n"
             "border-radius:15px\n"
-            "}\n"
-            "\n"
-            "\n"
-            "QPushButton\n"
-            "{\n"
-            "\n"
-            "background:#2671a0;\n"
-            "border-radius:60px;\n"
             "}\n"
             "\n"
             "QToolButton\n"
@@ -61,15 +52,17 @@ class EnterCode(object):
             "background:transparent;\n"
             "font-weight:bold;\n"
             "}\n"
+            "\n"
             "#label_2{\n"
             "font-weight:normal;\n"
             "}\n"
-            "\n"
             "QPushButton\n"
             "{\n"
             "color:white;\n"
+            "background:#2671a0;\n"
             "border-radius:15px;\n"
             "font-weight:bold;\n"
+            "\n"
             "}\n"
             "QPushButton:hover\n"
             "{\n"
@@ -81,6 +74,7 @@ class EnterCode(object):
             "background:rgba(0,0,0,0);\n"
             "font-weight:normal;\n"
             "}\n"
+            "\n"
             "QLineEdit\n"
             "{\n"
             "background:transparent;\n"
@@ -95,7 +89,7 @@ class EnterCode(object):
         self.frame.setFrameShadow(QFrame.Raised)
         self.frame.setObjectName("frame")
         self.label = QLabel(self.frame)
-        self.label.setGeometry(QtCore.QRect(120, 40, 101, 41))
+        self.label.setGeometry(QtCore.QRect(120, 40, 111, 41))
         self.label.setStyleSheet("")
         self.label.setFrameShadow(QFrame.Plain)
         self.label.setTextFormat(QtCore.Qt.AutoText)
@@ -113,10 +107,10 @@ class EnterCode(object):
         self.lineEdit_2.setEchoMode(QLineEdit.Normal)
         self.lineEdit_2.setObjectName("lineEdit_2")
         self.pushbutton2 = QPushButton(self.frame)
-        self.pushbutton2.setGeometry(QtCore.QRect(50, 290, 241, 31))
+        self.pushbutton2.setGeometry(QtCore.QRect(40, 290, 241, 31))
         self.pushbutton2.setObjectName("pushbutton2")
         self.label_2 = QLabel(self.frame)
-        self.label_2.setGeometry(QtCore.QRect(20, 100, 141, 31))
+        self.label_2.setGeometry(QtCore.QRect(20, 100, 201, 31))
         self.label_2.setObjectName("label_2")
         self.toolButton = QToolButton(Form)
         self.toolButton.setGeometry(QtCore.QRect(130, 10, 81, 81))
@@ -129,14 +123,6 @@ class EnterCode(object):
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
-        try:
-            email = Path("modules", "user.txt").read_text()
-            sequence = fetch_sequence(email)
-            t1 = threading.Thread(target=threads_start, args=(sequence , email, 'Test',))
-            t1.start()
-        except: 
-            logger.error("Error occurred during execution of threads!", exc_info=True)
-
     def retranslateUi(self, Form: QWidget) -> None:
         """Sets the text and titles of the widgets.
         
@@ -148,9 +134,9 @@ class EnterCode(object):
         Form.setWindowTitle(_translate("Form", "Vault Plus"))
         self.label.setText(_translate("Form", "Vault Plus"))
         self.pushButton.setText(_translate("Form", "Log in"))
-        self.lineEdit_2.setPlaceholderText(_translate("Form", "9 digit code"))
-        self.pushbutton2.setText(_translate("Form", "Forgot/Lost Sequence?"))
-        self.label_2.setText(_translate("Form", "Enter code:"))
+        self.lineEdit_2.setPlaceholderText(_translate("Form", "8 digit code"))
+        self.pushbutton2.setText(_translate("Form", "Go back"))
+        self.label_2.setText(_translate("Form", "Enter backup code:"))
 
     def validate(self) -> bool:
         """Validate the input provided by the user.
@@ -164,17 +150,22 @@ class EnterCode(object):
         icon.addPixmap(QtGui.QPixmap(":/newPrefix/new.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         msg.setWindowIcon(QtGui.QIcon(icon))
         msg.setIcon(QMessageBox.Warning)
-        user_code = self.lineEdit_2.text()
-        user_code = user_code.upper().replace("-", "")
-        if not user_code:
-            msg.setWindowTitle("Code")
-            msg.setText("Please fill all fields.")
+        usercode = self.lineEdit_2.text()
+        if not usercode:
+            msg.setWindowTitle("Backup code")
+            msg.setText('Please fill all fields.')
             msg.exec_()
-        elif verify(user_code):
-            stop_execution()
-            return True
         else:
-            msg.setWindowTitle("Code")
-            msg.setText("Invalid code. Try again.")
-            self.lineEdit_2.clear()
-            msg.exec_()
+            usercode = usercode.replace("-", "").replace(" ", "")
+            email = Path("modules", "user.txt").read_text()
+            if not validate_backupcode(email, usercode):
+                msg.setWindowTitle("Backup Code")
+                msg.setText("Invalid code. Try again.")
+                msg.exec_()
+            else:
+                self.Form.close()
+                msg.setIcon(QMessageBox.Information)
+                msg.setWindowTitle("Backup code")
+                msg.setText("Backup codes have been updated. Go to 'Backup codes' section and view your updated backup codes.")
+                msg.exec_()
+                return True

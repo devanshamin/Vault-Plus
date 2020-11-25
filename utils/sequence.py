@@ -4,8 +4,9 @@ from pathlib import Path
 from ast import literal_eval
 from typing import Text, List
 
-from utils.logger import logger
 from utils.adminDB import conn
+from utils.logger import logger
+from utils.pdf import PDF, encrypt_pdf
 
 def generate_otp(length: List[int]) -> Text:
     """Generate a random OTP based on the length of user's sequence.
@@ -88,29 +89,23 @@ def check(sequence: Text) -> bool:
     except BaseException:
         logger.error("Error happened while executing a SQL query!", exc_info=True)
 
+def download_sequence(email: Text, mp: Text, sequence: Text, dir_path: Path) -> None:
+    """Make, encrypt and save the user's sequence as a PDF file in users directory.
+    
+    Args:
+        email: User's email address.
+        mp: User's master password.
+        sequence: User's sequence.
+        dir_path: Directory path to save the PDF file.
+    """
 
-
-def Download_Sequence(sq_no, email, password):
-    try:
-        i=1
-        s = sequence[sq_no]
-        for o in s:
-            if i == 1:
-                a = o
-            elif i == 2:
-                b = o
-            elif i == 3:
-                c = o
-            i +=1
-        pdf = PDF()
-        pdf.set_title(title)
-        pdf.set_author('Vault Plus')
-        pdf.add_page()
-        pdf.print_chapter(1, a)
-        pdf.print_chapter(2, b)
-        pdf.print_chapter(3, c)
-        pdf.output('Sequence.pdf', 'F')
-        Encrypt_pdf(password, email)
-        return 0
-    except:
-        return 101
+    pdf = PDF()
+    pdf.set_title("Sequence")
+    pdf.set_author("Vault Plus")
+    pdf.add_page()
+    pdf.print_chapter(1, sequence[0])
+    pdf.print_chapter(2, sequence[1])
+    pdf.print_chapter(3, sequence[2])
+    pdf_name = "Unencrypted_Sequence.pdf"
+    pdf.output(Path(dir_path, pdf_name), "F")
+    encrypt_pdf(mp, Path(dir_path, pdf_name))

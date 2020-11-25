@@ -17,7 +17,6 @@ class Login(object):
             MainWindow: Object of QMainWindow.
         """
 
-        self.MainWindow = MainWindow
         MainWindow.setObjectName("MainWindow")
         MainWindow.setFixedSize(374,444)
         icon = QtGui.QIcon()
@@ -127,9 +126,6 @@ class Login(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        #self.pushButton.clicked.connect(self.validate)
-        #self.pushbutton2.clicked.connect(self.create_account)
-
     def retranslateUi(self, MainWindow: QtWidgets.QMainWindow) -> None:
         """Sets the text and titles of the widgets.
         
@@ -158,7 +154,7 @@ class Login(object):
         msg.setIcon(QtWidgets.QMessageBox.Warning)
         email = self.lineEdit.text()
         password = self.lineEdit_2.text()
-        if email == '' or password == '':
+        if not email or not password:
             msg.setWindowTitle("Login")
             msg.setText("Please fill all fields.")
             msg.exec_()

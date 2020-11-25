@@ -54,7 +54,7 @@ class PDF(FPDF):
         self.chapter_title(num)
         self.chapter_body(txt)
 
-def encrypt_pdf(password: Text, fpath: Text) -> None:
+def encrypt_pdf(password: Text, fpath: Path) -> None:
     """Encrypts a pdf file.
     
     Args:

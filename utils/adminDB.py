@@ -11,11 +11,14 @@ conn = sqlite3.connect(Path(admin_path, "Admin.db"))
 def users_table() -> None:
     """Create a USERS table in admin database."""
 
-    conn.execute('''
-        CREATE TABLE IF NOT EXISTS USERS
-        (Sequence TEXT PRIMARY KEY, 
-        User TEXT);
-        ''')  
+    try:
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS USERS
+            (Sequence TEXT PRIMARY KEY, 
+            User TEXT);
+            ''')
+    except BaseException:
+        logger.error("Error happened while executing a SQL query!", exc_info=True)
 
 def insert_user(sequence: Text, uid: Text) -> None:
     """Insert a user into the USERS table.
@@ -25,5 +28,8 @@ def insert_user(sequence: Text, uid: Text) -> None:
         uid: User's id.
     """
 
-    conn.execute("INSERT INTO USERS VALUES (?,?)",(sequence, uid))
-    conn.commit()
+    try:
+        conn.execute("INSERT INTO USERS VALUES (?,?)",(sequence, uid))
+        conn.commit()
+    except BaseException:
+        logger.error("Error happened while executing a SQL query!", exc_info=True)

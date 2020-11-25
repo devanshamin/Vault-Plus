@@ -106,6 +106,7 @@ class CreateAnAccount(object):
         self.pushbutton3.setGeometry(QtCore.QRect(320, 190, 31, 31))
         self.pushbutton3.setStyleSheet("font:bold;")
         self.pushbutton3.setObjectName("pushbutton3")
+        self.pushbutton3.setToolTip("View password requirements")
         self.lineEdit_3 = QtWidgets.QLineEdit(self.frame)
         self.lineEdit_3.setGeometry(QtCore.QRect(20, 120, 291, 31))
         font = QtGui.QFont()
@@ -138,10 +139,6 @@ class CreateAnAccount(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        #self.pushButton.clicked.connect(self.validate)
-        #self.pushbutton2.clicked.connect(self.login)
-        #self.pushbutton3.clicked.connect(self.pwd_req)
-
     def retranslateUi(self, MainWindow: QtWidgets.QMainWindow) -> None:
         """Sets the text and titles of the widgets.
         
@@ -172,7 +169,7 @@ class CreateAnAccount(object):
         
         email = self.lineEdit_3.text()
         password = self.lineEdit_4.text()
-        if email == '' or password == '':
+        if not email or not password:
             msg.setWindowTitle("Create account")
             msg.setText("Please fill all fields.")
             msg.exec_()

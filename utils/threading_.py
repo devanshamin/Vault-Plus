@@ -94,9 +94,6 @@ def threads_start(sequence: Text, user_email: Text, user_code: Text) -> None:
         user_email: User's email address.
         user_code: Code entered by user for 2FA.
     """
-
-    #global start_time
-    #start_time = time.time() + 5
     
     main_t1 = threading.Thread(target = thread_1, args = (sequence, user_email))
     main_t2 = threading.Thread(target = thread_2, args = [user_code])

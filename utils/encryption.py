@@ -25,7 +25,7 @@ IV = IV.encode("utf-8")
 mode = AES.MODE_CBC
 
 def hex_key(uid: Text, mp: Text) -> Text:
-    """Create a hexadecimal key using an object of sha256.
+    """Create a hexadecimal key using an object of SHA256.
     
     Args:
         uid: User's id.
