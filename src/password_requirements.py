@@ -12,7 +12,7 @@ class PasswordRequirements(object):
 
         Form.setObjectName("Form")
         Form.setFixedSize(301, 230)
-        Form.move(130, 170)
+        #Form.move(281, 211)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/newPrefix/new.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Form.setWindowIcon(icon)

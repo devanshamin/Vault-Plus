@@ -17,7 +17,7 @@ class PDF(FPDF):
         self.set_draw_color(0, 0, 0)
         self.set_fill_color(255, 255, 255)
         self.set_text_color(220, 50, 50)
-        self.cell(w=w, h=9, txt=title, border=0, ln=1, align="C", fill=1, link="https://rdcu.be/caQXq")
+        self.cell(w=w, h=9, txt=title, border=0, ln=1, align="C", fill=1, link="https://link.springer.com/chapter/10.1007%2F978-3-030-60700-5_15")
         self.ln(10)
 
     def chapter_title(self, num: int) -> None:
