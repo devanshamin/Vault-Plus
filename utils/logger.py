@@ -3,9 +3,13 @@ from pathlib import Path
 
 from rich.logging import RichHandler
 
-logger = logging.getLogger(__name__)
+path = Path("logs")
+if not path.exists():
+    path.mkdir()
 
-file_handler = logging.FileHandler(Path("logs", "debug.log"))
+logger = logging.getLogger(__name__)
+ 
+file_handler = logging.FileHandler(Path(path, "debug.log"))
 
 logger.setLevel(logging.DEBUG)
 file_handler.setLevel(logging.DEBUG)
