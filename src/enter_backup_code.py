@@ -100,7 +100,7 @@ class EnterBackupCode(object):
         self.lineEdit_2 = QLineEdit(self.frame)
         self.lineEdit_2.setGeometry(QtCore.QRect(20, 150, 271, 31))
         font = QtGui.QFont()
-        font.setFamily("century gothic")
+        font.setFamily("Calibri")
         self.lineEdit_2.setFont(font)
         self.lineEdit_2.setStyleSheet("font-size:19px;")
         self.lineEdit_2.setText("")
