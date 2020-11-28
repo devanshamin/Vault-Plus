@@ -11,8 +11,8 @@ from utils.logger import logger
 from utils.vaultplusDB import fetch_sequence
 from utils.threading_ import threads_start, verify, stop_execution
 
-class EnterCode(object):
-    """Display enter code GUI to the user."""
+class EnterCodeON(object):
+    """Display enter code (online implementation) GUI to the user."""
 
     def setupUi(self, Form: QWidget) -> None:
         """Creates the widget objects in the proper containers and assigns the proper object names to them.
@@ -106,7 +106,7 @@ class EnterCode(object):
         self.lineEdit_2 = QLineEdit(self.frame)
         self.lineEdit_2.setGeometry(QtCore.QRect(20, 150, 271, 31))
         font = QtGui.QFont()
-        font.setFamily("century gothic")
+        font.setFamily("Calibri")
         self.lineEdit_2.setFont(font)
         self.lineEdit_2.setStyleSheet("font-size:19px;")
         self.lineEdit_2.setText("")
@@ -165,16 +165,16 @@ class EnterCode(object):
         msg.setWindowIcon(QtGui.QIcon(icon))
         msg.setIcon(QMessageBox.Warning)
         user_code = self.lineEdit_2.text()
-        user_code = user_code.upper().replace("-", "")
+        user_code = user_code.upper().replace("-", "").replace(" ", "")
         if not user_code:
             msg.setWindowTitle("Code")
             msg.setText("Please fill all fields.")
             msg.exec_()
-        elif verify(user_code):
-            stop_execution()
-            return True
-        else:
+        elif not verify(user_code):
             msg.setWindowTitle("Code")
             msg.setText("Invalid code. Try again.")
             self.lineEdit_2.clear()
             msg.exec_()
+        else:
+            stop_execution()
+            return True

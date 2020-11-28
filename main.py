@@ -2,9 +2,10 @@ import sys
 
 from PyQt5 import QtCore, QtWidgets
 
-from src import (login, create_account, enter_code, 
-                password_requirements, enter_backup_code,
-                password_manager, sequence_info, demo)
+from src import (login, create_account, enter_code_online,
+                enter_code_offline, password_requirements, 
+                enter_backup_code, password_manager, 
+                sequence_info, demo)
 from utils.threading_ import stop_execution
 
 class Login_(QtWidgets.QMainWindow, login.Login):
@@ -59,7 +60,30 @@ class CreateAnAccount_(QtWidgets.QMainWindow, create_account.CreateAnAccount):
     def pushbutton3_handler(self):
         self.switch_window3.emit()
 
-class EnterCode_(QtWidgets.QWidget, enter_code.EnterCode):
+class EnterCodeON_(QtWidgets.QWidget, enter_code_online.EnterCodeON):
+
+    # Switch window when "Log in" button is clicked.
+    switch_window = QtCore.pyqtSignal()
+    # Switch window when "Forgot/Lost Sequence?" button is clicked.
+    switch_window2 = QtCore.pyqtSignal()
+
+    def __init__(self):
+        QtWidgets.QWidget.__init__(self)
+        self.setupUi(self)
+        self.pushButton.clicked.connect(self.pushButton_handler)
+        self.pushbutton2.clicked.connect(self.pushbutton2_handler)
+
+    def pushButton_handler(self):
+        # First validate the user inputs and then display the next window.
+        if self.validate():
+            self.close()
+            self.switch_window.emit()
+
+    def pushbutton2_handler(self):
+        self.close()
+        self.switch_window2.emit()
+
+class EnterCodeOF_(QtWidgets.QWidget, enter_code_offline.EnterCodeOF):
 
     # Switch window when "Log in" button is clicked.
     switch_window = QtCore.pyqtSignal()
@@ -161,7 +185,7 @@ class Controller(object):
 
     def show_login(self) -> None:
         self.login = Login_()
-        self.login.switch_window.connect(self.show_enter_code)
+        self.login.switch_window.connect(self.show_enter_code_offline)
         self.login.switch_window2.connect(self.show_create_an_account)
         self.login.show()
 
@@ -172,8 +196,15 @@ class Controller(object):
         self.caccount.switch_window3.connect(self.show_password_requirements)
         self.caccount.show()
     
-    def show_enter_code(self) -> None:
-        self.ecode = EnterCode_()
+    def show_enter_code_online(self) -> None:
+        self.ecode = EnterCodeON_()
+        self.ecode.switch_window.connect(self.show_password_manager)
+        self.ecode.switch_window2.connect(self.show_enter_backup_code)
+        self.ecode.show()
+    
+    def show_enter_code_offline(self) -> None:
+        self.ecode = EnterCodeOF_()
+        self.ecode.start_timer()
         self.ecode.switch_window.connect(self.show_password_manager)
         self.ecode.switch_window2.connect(self.show_enter_backup_code)
         self.ecode.show()
@@ -189,7 +220,7 @@ class Controller(object):
     def show_enter_backup_code(self) -> None:
         self.ebcode = EnterBackupCode_()
         self.ebcode.switch_window.connect(self.show_password_manager)
-        self.ebcode.switch_window2.connect(self.show_enter_code)
+        self.ebcode.switch_window2.connect(self.show_enter_code_offline)
         self.ebcode.show()
     
     def show_sequence_info(self) -> None:
@@ -205,7 +236,7 @@ class Controller(object):
 
 if __name__ == "__main__":
 
-    # Starts off the QApplication object’s event loop.
+    # QApplication class manages the GUI application’s control flow and main settings.
     app = QtWidgets.QApplication(sys.argv)
 
     # Controls the display of the widgets.
@@ -214,5 +245,6 @@ if __name__ == "__main__":
     # Display the startup window (Login).
     controller.show_login()
     
+    # app.exec() starts off the QApplication object’s event loop.
     # sys.exit() method ensures a clean exit.
     sys.exit(app.exec_())
