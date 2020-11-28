@@ -5,7 +5,7 @@ from typing import Text, List
 
 from utils.logger import logger
 from utils.email import email_otp
-from utils.sequence import generate, generate_otp, derive_code
+from utils.sequence import generate_otp, derive_code
 
 code = ''
 tflag = True
