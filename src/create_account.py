@@ -20,7 +20,7 @@ class CreateAnAccount(object):
         """
 
         MainWindow.setObjectName("MainWindow")
-        MainWindow.setFixedSize(401, 443)
+        MainWindow.setFixedSize(401, 521)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/newPrefix/new.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
@@ -29,34 +29,28 @@ class CreateAnAccount(object):
             "font-family:Calibri;\n"
             "font-size:20px;\n"
             "}\n"
-            "\n"
             "QFrame\n"
             "{\n"
             "background: rgba(0,0,0,0.8);\n"
             "border-radius:15px\n"
             "}\n"
-            "\n"
-            "\n"
             "QPushButton\n"
             "{\n"
             "\n"
             "background:#2671a0;\n"
             "border-radius:60px;\n"
             "}\n"
-            "\n"
             "QToolButton\n"
             "{\n"
             "background:#2671a0;\n"
             "border-radius:40px;\n"
             "}\n"
-            "\n"
             "QLabel\n"
             "{\n"
             "color:white;\n"
             "background:transparent;\n"
             "font-weight:bold;\n"
             "}\n"
-            "\n"
             "QPushButton\n"
             "{\n"
             "color:white;\n"
@@ -72,22 +66,35 @@ class CreateAnAccount(object):
             "background:rgba(0,0,0,0);\n"
             "font-weight:normal;\n"
             "}\n"
-            "#pushbutton3:hover{\n"
-            "color:black;\n"
-            "background:red;\n"
-            "}\n"
             "QLineEdit\n"
             "{\n"
             "background:transparent;\n"
             "border:none;\n"
             "color:white;\n"
             "border-bottom:1px solid #717072;\n"
+            "}\n"
+            "QRadioButton\n"
+            "{\n"
+            "color:white;\n"
+            "font-size:19px\n"
+            "}\n"
+            "#label_2\n"
+            "{\n"
+            "font-weight:normal;\n"
+            "font-size:19px;\n"
+            "}\n"
+            "QToolTip\n"
+            "{\n"
+            "font-weight:normal;\n"
+            "background-color:black;\n" 
+            "color:white;\n"
+            "border:black solid 1px;\n"
             "}"
             )
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.frame = QtWidgets.QFrame(self.centralwidget)
-        self.frame.setGeometry(QtCore.QRect(20, 50, 361, 361))
+        self.frame.setGeometry(QtCore.QRect(20, 50, 361, 441))
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
@@ -97,16 +104,16 @@ class CreateAnAccount(object):
         self.label.setTextFormat(QtCore.Qt.AutoText)
         self.label.setObjectName("label")
         self.pushButton = QtWidgets.QPushButton(self.frame)
-        self.pushButton.setGeometry(QtCore.QRect(10, 260, 341, 51))
+        self.pushButton.setGeometry(QtCore.QRect(10, 330, 341, 51))
         self.pushButton.setObjectName("pushButton")
         self.pushbutton2 = QtWidgets.QPushButton(self.frame)
-        self.pushbutton2.setGeometry(QtCore.QRect(50, 330, 271, 21))
+        self.pushbutton2.setGeometry(QtCore.QRect(50, 400, 271, 21))
         self.pushbutton2.setObjectName("pushbutton2")
         self.pushbutton3 = QtWidgets.QPushButton(self.frame)
         self.pushbutton3.setGeometry(QtCore.QRect(320, 190, 31, 31))
         self.pushbutton3.setStyleSheet("font:bold;")
         self.pushbutton3.setObjectName("pushbutton3")
-        self.pushbutton3.setToolTip("View password requirements")
+        self.pushbutton3.setToolTip("Password requirements")
         self.lineEdit_3 = QtWidgets.QLineEdit(self.frame)
         self.lineEdit_3.setGeometry(QtCore.QRect(20, 120, 291, 31))
         font = QtGui.QFont()
@@ -124,10 +131,24 @@ class CreateAnAccount(object):
         self.lineEdit_4.setText("")
         self.lineEdit_4.setEchoMode(QtWidgets.QLineEdit.Password)
         self.lineEdit_4.setObjectName("lineEdit_4")
+        self.label_2 = QtWidgets.QLabel(self.frame)
+        self.label_2.setGeometry(QtCore.QRect(20, 260, 131, 41))
+        self.label_2.setObjectName("label_2")
+        self.radioButton = QtWidgets.QRadioButton(self.frame)
+        self.radioButton.setGeometry(QtCore.QRect(170, 260, 81, 41))
+        self.radioButton.setObjectName("radioButton")
+        self.radioButton.setToolTip("OTP is sent via email")
+        self.radioButton.setChecked(True)
+        self.radioButton_2 = QtWidgets.QRadioButton(self.frame)
+        self.radioButton_2.setGeometry(QtCore.QRect(260, 260, 81, 41))
+        self.radioButton_2.setObjectName("radioButton_2")
+        self.radioButton_2.setToolTip("OTP is shown within the GUI")
         self.toolButton_2 = QtWidgets.QToolButton(self.centralwidget)
         self.toolButton_2.setGeometry(QtCore.QRect(160, 10, 81, 81))
         self.toolButton_2.setStyleSheet("")
         self.toolButton_2.setText("")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/newPrefix/new.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton_2.setIcon(icon)
         self.toolButton_2.setIconSize(QtCore.QSize(45, 50))
         self.toolButton_2.setObjectName("toolButton_2")
@@ -154,6 +175,9 @@ class CreateAnAccount(object):
         self.pushbutton3.setText(_translate("MainWindow", "i"))
         self.lineEdit_3.setPlaceholderText(_translate("MainWindow", "Enter your email"))
         self.lineEdit_4.setPlaceholderText(_translate("MainWindow", "Create a strong password"))
+        self.label_2.setText(_translate("MainWindow", "Select 2FA type:"))
+        self.radioButton.setText(_translate("MainWindow", "Online"))
+        self.radioButton_2.setText(_translate("MainWindow", "Offline"))
 
     def validate(self) -> bool:
         """Validate the input provided by the user.
@@ -190,6 +214,7 @@ class CreateAnAccount(object):
                         msg.setText(problem)
                         msg.exec_()
                     else:
-                        Registration(email, password)
+                        type_ = "Online" if self.radioButton.isChecked() else "Offline"
+                        Registration(email, password, type_)
                         Path("modules", "user.txt").write_text(email)
                         return True

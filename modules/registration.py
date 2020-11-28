@@ -10,7 +10,7 @@ from utils.sequence import generate, check, download_sequence
 class Registration(object):
     """New user registration module."""
 
-    def __init__(self, email: Text, password: Text):
+    def __init__(self, email: Text, password: Text, type_: Text):
         self.email = email
         self.password = password
         self.uid = id_(self.email)
@@ -20,9 +20,10 @@ class Registration(object):
         vaultplusDB.uid_table(self.uid)
         
         hashed_mp = hex_key(self.uid, self.password) # Master password ready for db insertion
-        sequence_cipher = AES_encrypt(user_sequence) # Sequence_no ready for db insertion
-        bcode_cipher = AES_encrypt(self.backupcode())
-        vaultplusDB.insert_user(self.email, hashed_mp, sequence_cipher, bcode_cipher)
+        sequence_cipher = AES_encrypt(user_sequence) # User sequence ready for db insertion
+        bcode_cipher = AES_encrypt(self.backupcode()) # Backup codes ready for db insertion
+        type_cipher = AES_encrypt(type_) # 2FA type ready for db insertion
+        vaultplusDB.insert_user(self.email, hashed_mp, sequence_cipher, bcode_cipher, type_cipher)
 
     def generate_sequence(self) -> Text:
         """Generate a unique sequence for the user.

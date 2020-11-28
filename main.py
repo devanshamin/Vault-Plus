@@ -1,12 +1,14 @@
 import sys
+from pathlib import Path
 
 from PyQt5 import QtCore, QtWidgets
 
+from utils.threading_ import stop_execution
+from utils.vaultplusDB import fetch_2FA_type
 from src import (login, create_account, enter_code_online,
                 enter_code_offline, password_requirements, 
                 enter_backup_code, password_manager, 
                 sequence_info, demo)
-from utils.threading_ import stop_execution
 
 class Login_(QtWidgets.QMainWindow, login.Login):
 
@@ -185,10 +187,13 @@ class Controller(object):
 
     def show_login(self) -> None:
         self.login = Login_()
-        self.login.switch_window.connect(self.show_enter_code_offline)
+        if fetch_2FA_type(email) == "Online":
+            self.login.switch_window.connect(self.show_enter_code_online)
+        else:
+            self.login.switch_window.connect(self.show_enter_code_offline)
         self.login.switch_window2.connect(self.show_create_an_account)
         self.login.show()
-
+    
     def show_create_an_account(self) -> None:
         self.caccount = CreateAnAccount_()
         self.caccount.switch_window.connect(self.show_sequence_info)
@@ -220,7 +225,10 @@ class Controller(object):
     def show_enter_backup_code(self) -> None:
         self.ebcode = EnterBackupCode_()
         self.ebcode.switch_window.connect(self.show_password_manager)
-        self.ebcode.switch_window2.connect(self.show_enter_code_offline)
+        if fetch_2FA_type(email) == "Online":
+            self.ebcode.switch_window.connect(self.show_enter_code_online)
+        else:
+            self.ebcode.switch_window2.connect(self.show_enter_code_offline)
         self.ebcode.show()
     
     def show_sequence_info(self) -> None:
@@ -235,6 +243,11 @@ class Controller(object):
         self.demo.show()
 
 if __name__ == "__main__":
+
+    path = Path("modules", "user.txt")
+    if not path.exists():
+        email = ""
+        path.write_text(email)
 
     # QApplication class manages the GUI application’s control flow and main settings.
     app = QtWidgets.QApplication(sys.argv)

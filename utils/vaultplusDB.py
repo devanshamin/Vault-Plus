@@ -20,9 +20,10 @@ def users_table() -> None:
                     (Email TEXT PRIMARY KEY,
                      Password TEXT,                           
                      Sequence TEXT,                 
-                     BackupCode TEXT);''')
+                     BackupCode TEXT,
+                     Type TEXT);''')
 
-def insert_user(email, mp, sequence, bcode) -> None:
+def insert_user(email: Text, mp: Text, sequence: bytes, bcode: bytes, type_: bytes) -> None:
     """Insert a user into the USERS table.
     
     Args:
@@ -30,10 +31,11 @@ def insert_user(email, mp, sequence, bcode) -> None:
         mp: User's hashed master password.
         sequence: User's sequence cipher.
         bcode: User's backupcodes cipher.
+        type_: 2FA type (Online/Offline).
     """
 
     try:
-        conn.execute('''INSERT INTO USERS VALUES (?,?,?,?)''',(email, mp, sequence, bcode))
+        conn.execute('''INSERT INTO USERS VALUES (?,?,?,?,?)''',(email, mp, sequence, bcode, type_))
         conn.commit()
     except BaseException:
         logger.error("Error happened while executing a SQL query!", exc_info=True)
@@ -262,9 +264,26 @@ def fetch_backupcodes(email: Text) -> Text:
     
     Args:
         email: User's email address.
+    Returns:
+        User's backup codes.
     """
     try:
         cursor = conn.execute(f"SELECT BackupCode FROM USERS WHERE Email='{email}'")
+        for row in cursor:
+            return AES_decrypt(row[0])
+    except BaseException:
+        logger.error("Error happened while executing a SQL query!", exc_info=True)
+
+def fetch_2FA_type(email: Text) -> Text:
+    """Fetch user's 2FA type from the database. 
+    
+    Args:
+        email: User's email address.
+    Returns:
+        User's 2FA type.
+    """
+    try:
+        cursor = conn.execute(f"SELECT Type FROM USERS WHERE Email='{email}'")
         for row in cursor:
             return AES_decrypt(row[0])
     except BaseException:
