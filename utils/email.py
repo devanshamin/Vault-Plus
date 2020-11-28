@@ -15,9 +15,13 @@ def email_otp(otp: Text, receiver_email: Text) -> None:
         receiver_email: Receiver's email address.
     """
 
-    config = json.loads(Path("config.json").read_text())
-    sender_email = config["email"]
-    password = config["password"]
+    try:
+        config = json.loads(Path("config.json").read_text())
+        sender_email = config["email"]
+        password = config["password"]
+    except:
+        raise Exception("Please enter your email and password in 'config.json'. Note: Email and password are required to send an OTP via email for 2FA.")
+
     message = MIMEMultipart()
     message['Subject'] = "One Time Password (OTP)"
     message['From'] = sender_email
