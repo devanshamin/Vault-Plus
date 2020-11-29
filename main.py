@@ -23,7 +23,7 @@ class Login_(QtWidgets.QMainWindow, login.Login):
         self.pushButton.clicked.connect(self.pushButton_handler)
         self.pushbutton2.clicked.connect(self.pushbutton2_handler)
 
-    def pushButton_handler(self):
+    def pushButton_handler(self) -> None:
         # First validate the user inputs and then display the next window.
         if self.validate():
             self.close()
@@ -34,7 +34,7 @@ class Login_(QtWidgets.QMainWindow, login.Login):
                 self.switch_window.connect(controller.show_enter_otp_offline)
             self.switch_window.emit()
 
-    def pushbutton2_handler(self):
+    def pushbutton2_handler(self) -> None:
         self.close()
         self.switch_window2.emit()
 
@@ -54,17 +54,17 @@ class CreateAnAccount_(QtWidgets.QMainWindow, create_account.CreateAnAccount):
         self.pushbutton2.clicked.connect(self.pushbutton2_handler)
         self.pushbutton3.clicked.connect(self.pushbutton3_handler)
 
-    def pushButton_handler(self):
+    def pushButton_handler(self) -> None:
         # First validate the user inputs and then display the next window.
         if self.validate():
             self.close()
             self.switch_window.emit()
 
-    def pushbutton2_handler(self):
+    def pushbutton2_handler(self) -> None:
         self.close()
         self.switch_window2.emit()
 
-    def pushbutton3_handler(self):
+    def pushbutton3_handler(self) -> None:
         self.switch_window3.emit()
 
 class EnterOtpON_(QtWidgets.QWidget, enter_otp_online.EnterOtpON):
@@ -80,13 +80,13 @@ class EnterOtpON_(QtWidgets.QWidget, enter_otp_online.EnterOtpON):
         self.pushButton.clicked.connect(self.pushButton_handler)
         self.pushbutton2.clicked.connect(self.pushbutton2_handler)
 
-    def pushButton_handler(self):
+    def pushButton_handler(self) -> None:
         # First validate the user inputs and then display the next window.
         if self.validate():
             self.close()
             self.switch_window.emit()
 
-    def pushbutton2_handler(self):
+    def pushbutton2_handler(self) -> None:
         self.close()
         self.switch_window2.emit()
 
@@ -103,13 +103,13 @@ class EnterOtpOF_(QtWidgets.QWidget, enter_otp_offline.EnterOtpOF):
         self.pushButton.clicked.connect(self.pushButton_handler)
         self.pushbutton2.clicked.connect(self.pushbutton2_handler)
 
-    def pushButton_handler(self):
+    def pushButton_handler(self) -> None:
         # First validate the user inputs and then display the next window.
         if self.validate():
             self.close()
             self.switch_window.emit()
 
-    def pushbutton2_handler(self):
+    def pushbutton2_handler(self) -> None:
         self.close()
         self.switch_window2.emit()
 
@@ -132,17 +132,17 @@ class EnterBackupCode_(QtWidgets.QWidget, enter_backup_code.EnterBackupCode):
         self.pushButton.clicked.connect(self.pushButton_handler)
         self.pushbutton2.clicked.connect(self.pushbutton2_handler)
 
-    def pushButton_handler(self):
+    def pushButton_handler(self) -> None:
         # First validate the user inputs and then display the next window.
         if self.validate():
             #self.close()
             self.switch_window.emit()
 
-    def pushbutton2_handler(self):
+    def pushbutton2_handler(self) -> None:
         self.close()
         self.switch_window2.emit()
     
-    def closeEvent(self, event):
+    def closeEvent(self, event) -> None:
         stop_execution()
 
 class PasswordManager_(QtWidgets.QWidget, password_manager.VaultPlus):
@@ -155,7 +155,7 @@ class PasswordManager_(QtWidgets.QWidget, password_manager.VaultPlus):
         self.setupUi(self)
         self.pushButton_9.clicked.connect(self.pushButton_9_handler)
     
-    def pushButton_9_handler(self):
+    def pushButton_9_handler(self) -> None:
         if self.delete_account():
             self.close()
             self.switch_window.emit()
@@ -173,11 +173,11 @@ class SequenceInfo_(QtWidgets.QWidget, sequence_info.SequenceInfo):
         self.pushButton.clicked.connect(self.pushButton_handler)
         self.pushbutton2.clicked.connect(self.pushbutton2_handler)
     
-    def pushButton_handler(self):
+    def pushButton_handler(self) -> None:
         self.close()
         self.switch_window.emit()
 
-    def pushbutton2_handler(self):
+    def pushbutton2_handler(self) -> None:
         self.close()
         self.switch_window2.emit()
 
@@ -190,14 +190,15 @@ class Demo_(QtWidgets.QWidget, demo.Demo):
         QtWidgets.QWidget.__init__(self)
         self.setupUi(self)
 
-    def closeEvent(self, event):
+    def closeEvent(self, event) -> None:
         self.window_handler()
 
-    def window_handler(self):
+    def window_handler(self) -> None:
         self.close()
         self.switch_window.emit()
 
 class Controller(object):
+    """Control the display of the widgets."""
 
     def show_login(self) -> None:
         self.login = Login_()
@@ -262,7 +263,7 @@ if __name__ == "__main__":
     # Controls the display of the widgets.
     controller = Controller()
 
-    # Display the startup window (Login).
+    # Display the startup window (Log in).
     controller.show_login()
     
     # app.exec() starts off the QApplication object’s event loop.
