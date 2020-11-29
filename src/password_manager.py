@@ -5,6 +5,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 import src.images
 from utils.user_id import id_
+from utils import vaultplusDB, adminDB
 from utils.sequence import download_sequence
 from utils.vaultplusDB import (fetch_backupcodes, fetch_password, check_service, 
                                 store_password, update_password, delete_password,
@@ -27,8 +28,7 @@ class VaultPlus(object):
         self.Form = Form
         Form.setObjectName("Form")
         Form.setEnabled(True)
-        Form.resize(522, 553)
-        Form.setMaximumSize(QtCore.QSize(724, 702))
+        Form.setFixedSize(522, 553)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/newPrefix/new.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Form.setWindowIcon(icon)
@@ -236,6 +236,23 @@ class VaultPlus(object):
         self.pushButton_6.clicked.connect(self.view_backup_codes)
         self.pushButton_7.clicked.connect(self.download_backup_codes)
 
+        # Delete account
+        self.tab_7 = QtWidgets.QWidget()
+        self.tab_7.setObjectName("tab_7")
+        self.label_8 = QtWidgets.QLabel(self.tab_7)
+        self.label_8.setGeometry(QtCore.QRect(130, 30, 251, 42))
+        self.label_8.setStyleSheet("font-size:26px;")
+        self.label_8.setObjectName("label_8")
+        self.lineEdit_9 = QtWidgets.QLineEdit(self.tab_7)
+        self.lineEdit_9.setGeometry(QtCore.QRect(100, 100, 311, 33))
+        self.lineEdit_9.setStyleSheet("color:white;")
+        self.lineEdit_9.setEchoMode(QtWidgets.QLineEdit.Password)
+        self.lineEdit_9.setObjectName("lineEdit_9")
+        self.pushButton_9 = QtWidgets.QPushButton(self.tab_7)
+        self.pushButton_9.setGeometry(QtCore.QRect(190, 180, 131, 41))
+        self.pushButton_9.setObjectName("pushButton_9")
+        self.tabWidget.addTab(self.tab_7, "")
+
         self.toolButton_2 = QtWidgets.QToolButton(Form)
         self.toolButton_2.setGeometry(QtCore.QRect(210, 10, 101, 101))
         self.toolButton_2.setStyleSheet("")
@@ -278,6 +295,9 @@ class VaultPlus(object):
         self.pushButton_6.setText(_translate("Form", "View"))
         self.pushButton_7.setText(_translate("Form", "Download"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_6), _translate("Form", "Backup codes"))
+        self.label_8.setText(_translate("Form", "Enter master password"))
+        self.pushButton_9.setText(_translate("Form", "Delete"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_7), _translate("Form", "Delete account"))
 
     def view_password(self) -> None:
         """Fetch and display the password for a given service."""
@@ -384,9 +404,9 @@ class VaultPlus(object):
         msg.setIcon(QtWidgets.QMessageBox.Warning)
         service = self.lineEdit_6.text()
         self.lineEdit_6.clear()
-        if service == '':
+        if not service:
             msg.setWindowTitle("Store Password")
-            msg.setText('Please fill all fields.')
+            msg.setText("Please fill all fields.")
             msg.exec_()
         else:
             service = service.capitalize()
@@ -461,6 +481,33 @@ class VaultPlus(object):
         msg.setWindowTitle("Backup codes")
         msg.setText("Download complete. Text file can be found in the 'users' directory.")
         msg.exec_()
+
+    def delete_account(self) -> None:
+        """Delete a user's account."""
+
+        msg = QtWidgets.QMessageBox()
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/newPrefix/new.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        msg.setWindowIcon(QtGui.QIcon(icon))
+        msg.setIcon(QtWidgets.QMessageBox.Warning)
+        password = self.lineEdit_9.text()
+        self.lineEdit_9.clear()
+        if not password:
+            msg.setWindowTitle("Delete account")
+            msg.setText("Please fill all fields.")
+            msg.exec_()
+        else:
+            if validate_mp(self.email, password):
+                msg.setWindowTitle("Delete account")
+                msg.setText("Are you sure you want delete your account?")
+                msg.setInformativeText("Deleting your account cannot be undone; you will no longer have access to any data you have stored in Vault Plus.")
+                msg.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+                msg.setDefaultButton(QtWidgets.QMessageBox.No)
+                reply = msg.exec()
+                if reply == QtWidgets.QMessageBox.Yes:
+                    vaultplusDB.delete_user(self.email)
+                    adminDB.delete_user(self.email)
+                    return True
 
     def log_out(self) -> None:
         """Close the widget."""

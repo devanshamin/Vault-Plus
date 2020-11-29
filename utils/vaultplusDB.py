@@ -288,3 +288,19 @@ def fetch_2FA_type(email: Text) -> Text:
             return AES_decrypt(row[0])
     except BaseException:
         logger.error("Error happened while executing a SQL query!", exc_info=True)
+
+def delete_user(email: Text) -> None:
+    """Delete a user from the database.
+    
+    Args:
+        email: User's email address.
+    """
+
+    try:
+        conn.execute(f"DROP TABLE {id_(email)}")
+        conn.commit()
+
+        conn.execute(f"DELETE FROM USERS WHERE Email='{email}'")
+        conn.commit()
+    except BaseException:
+        logger.error("Error happened while executing a SQL query!", exc_info=True)

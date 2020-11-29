@@ -147,9 +147,18 @@ class EnterBackupCode_(QtWidgets.QWidget, enter_backup_code.EnterBackupCode):
 
 class PasswordManager_(QtWidgets.QWidget, password_manager.VaultPlus):
 
+    # Switch window when "Delete" button is pressed inside "Delete account" tab.
+    switch_window = QtCore.pyqtSignal()
+    
     def __init__(self):
         QtWidgets.QWidget.__init__(self)
         self.setupUi(self)
+        self.pushButton_9.clicked.connect(self.pushButton_9_handler)
+    
+    def pushButton_9_handler(self):
+        if self.delete_account():
+            self.close()
+            self.switch_window.emit()
 
 class SequenceInfo_(QtWidgets.QWidget, sequence_info.SequenceInfo):
 
@@ -221,6 +230,7 @@ class Controller(object):
 
     def show_password_manager(self) -> None:
         self.pm = PasswordManager_()
+        self.pm.switch_window.connect(self.show_login)
         self.pm.show()
 
     def show_enter_backup_code(self) -> None:
