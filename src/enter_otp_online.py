@@ -11,8 +11,8 @@ from utils.logger import logger
 from utils.vaultplusDB import fetch_sequence
 from utils.threading_ import threads_start, verify, stop_execution
 
-class EnterCodeON(object):
-    """Display enter code (online implementation) GUI to the user."""
+class EnterOtpON(object):
+    """Display enter OTP (online implementation) GUI to the user."""
 
     def setupUi(self, Form: QWidget) -> None:
         """Creates the widget objects in the proper containers and assigns the proper object names to them.
@@ -148,9 +148,9 @@ class EnterCodeON(object):
         Form.setWindowTitle(_translate("Form", "Vault Plus"))
         self.label.setText(_translate("Form", "Vault Plus"))
         self.pushButton.setText(_translate("Form", "Log in"))
-        self.lineEdit_2.setPlaceholderText(_translate("Form", "9 digit code"))
+        self.lineEdit_2.setPlaceholderText(_translate("Form", "9 digit OTP"))
         self.pushbutton2.setText(_translate("Form", "Forgot/Lost Sequence?"))
-        self.label_2.setText(_translate("Form", "Enter code:"))
+        self.label_2.setText(_translate("Form", "Enter OTP:"))
 
     def validate(self) -> bool:
         """Validate the input provided by the user.

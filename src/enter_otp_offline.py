@@ -10,8 +10,8 @@ from utils.sequence import generate_otp, derive_code
 
 length = None
 
-class EnterCodeOF(object):
-    """Display enter code (offline implementation) GUI to the user."""
+class EnterOtpOF(object):
+    """Display enter OTP (offline implementation) GUI to the user."""
 
     def setupUi(self, Form: QtWidgets.QWidget) -> None:
         """Creates the widget objects in the proper containers and assigns the proper object names to them.
@@ -198,10 +198,10 @@ class EnterCodeOF(object):
         Form.setWindowTitle(_translate("Form", "Vault Plus"))
         self.label.setText(_translate("Form", "Vault Plus"))
         self.pushButton.setText(_translate("Form", "Log in"))
-        self.lineEdit_2.setPlaceholderText(_translate("Form", "9 digit code"))
+        self.lineEdit_2.setPlaceholderText(_translate("Form", "9 digit OTP"))
         self.pushbutton2.setText(_translate("Form", "Forgot/Lost Sequence?"))
-        self.label_2.setText(_translate("Form", "Enter code:"))
-        self.label_3.setText(_translate("Form", "Your OTP is"))
+        self.label_2.setText(_translate("Form", "Enter OTP:"))
+        self.label_3.setText(_translate("Form", "Your code is"))
         self.label_4.setText(_translate("Form", "123 - 456 - 987"))
 
     def start_timer(self) -> None:

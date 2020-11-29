@@ -5,8 +5,8 @@ from PyQt5 import QtCore, QtWidgets
 
 from utils.threading_ import stop_execution
 from utils.vaultplusDB import fetch_2FA_type
-from src import (login, create_account, enter_code_online,
-                enter_code_offline, password_requirements, 
+from src import (login, create_account, enter_otp_online,
+                enter_otp_offline, password_requirements, 
                 enter_backup_code, password_manager, 
                 sequence_info, demo)
 
@@ -29,9 +29,9 @@ class Login_(QtWidgets.QMainWindow, login.Login):
             self.close()
             email = Path("modules", "user.txt").read_text()
             if fetch_2FA_type(email) == "Online":
-                self.switch_window.connect(controller.show_enter_code_online)
+                self.switch_window.connect(controller.show_enter_otp_online)
             else:
-                self.switch_window.connect(controller.show_enter_code_offline)
+                self.switch_window.connect(controller.show_enter_otp_offline)
             self.switch_window.emit()
 
     def pushbutton2_handler(self):
@@ -67,7 +67,7 @@ class CreateAnAccount_(QtWidgets.QMainWindow, create_account.CreateAnAccount):
     def pushbutton3_handler(self):
         self.switch_window3.emit()
 
-class EnterCodeON_(QtWidgets.QWidget, enter_code_online.EnterCodeON):
+class EnterOtpON_(QtWidgets.QWidget, enter_otp_online.EnterOtpON):
 
     # Switch window when "Log in" button is clicked.
     switch_window = QtCore.pyqtSignal()
@@ -90,7 +90,7 @@ class EnterCodeON_(QtWidgets.QWidget, enter_code_online.EnterCodeON):
         self.close()
         self.switch_window2.emit()
 
-class EnterCodeOF_(QtWidgets.QWidget, enter_code_offline.EnterCodeOF):
+class EnterOtpOF_(QtWidgets.QWidget, enter_otp_offline.EnterOtpOF):
 
     # Switch window when "Log in" button is clicked.
     switch_window = QtCore.pyqtSignal()
@@ -202,14 +202,14 @@ class Controller(object):
         self.caccount.switch_window3.connect(self.show_password_requirements)
         self.caccount.show()
     
-    def show_enter_code_online(self) -> None:
-        self.ecodeon = EnterCodeON_()
+    def show_enter_otp_online(self) -> None:
+        self.ecodeon = EnterOtpON_()
         self.ecodeon.switch_window.connect(self.show_password_manager)
         self.ecodeon.switch_window2.connect(self.show_enter_backup_code)
         self.ecodeon.show()
     
-    def show_enter_code_offline(self) -> None:
-        self.ecodeof = EnterCodeOF_()
+    def show_enter_otp_offline(self) -> None:
+        self.ecodeof = EnterOtpOF_()
         self.ecodeof.start_timer()
         self.ecodeof.switch_window.connect(self.show_password_manager)
         self.ecodeof.switch_window2.connect(self.show_enter_backup_code)
@@ -228,9 +228,9 @@ class Controller(object):
         self.ebcode.switch_window.connect(self.show_password_manager)
         email = Path("modules", "user.txt").read_text()
         if fetch_2FA_type(email) == "Online":
-            self.ebcode.switch_window2.connect(self.show_enter_code_online)
+            self.ebcode.switch_window2.connect(self.show_enter_otp_online)
         else:
-            self.ebcode.switch_window2.connect(self.show_enter_code_offline)
+            self.ebcode.switch_window2.connect(self.show_enter_otp_offline)
         self.ebcode.show()
     
     def show_sequence_info(self) -> None:
