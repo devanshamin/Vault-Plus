@@ -27,6 +27,11 @@ class Login_(QtWidgets.QMainWindow, login.Login):
         # First validate the user inputs and then display the next window.
         if self.validate():
             self.close()
+            email = Path("modules", "user.txt").read_text()
+            if fetch_2FA_type(email) == "Online":
+                self.switch_window.connect(controller.show_enter_code_online)
+            else:
+                self.switch_window.connect(controller.show_enter_code_offline)
             self.switch_window.emit()
 
     def pushbutton2_handler(self):
@@ -187,10 +192,6 @@ class Controller(object):
 
     def show_login(self) -> None:
         self.login = Login_()
-        if fetch_2FA_type(email) == "Online":
-            self.login.switch_window.connect(self.show_enter_code_online)
-        else:
-            self.login.switch_window.connect(self.show_enter_code_offline)
         self.login.switch_window2.connect(self.show_create_an_account)
         self.login.show()
     
@@ -202,17 +203,17 @@ class Controller(object):
         self.caccount.show()
     
     def show_enter_code_online(self) -> None:
-        self.ecode = EnterCodeON_()
-        self.ecode.switch_window.connect(self.show_password_manager)
-        self.ecode.switch_window2.connect(self.show_enter_backup_code)
-        self.ecode.show()
+        self.ecodeon = EnterCodeON_()
+        self.ecodeon.switch_window.connect(self.show_password_manager)
+        self.ecodeon.switch_window2.connect(self.show_enter_backup_code)
+        self.ecodeon.show()
     
     def show_enter_code_offline(self) -> None:
-        self.ecode = EnterCodeOF_()
-        self.ecode.start_timer()
-        self.ecode.switch_window.connect(self.show_password_manager)
-        self.ecode.switch_window2.connect(self.show_enter_backup_code)
-        self.ecode.show()
+        self.ecodeof = EnterCodeOF_()
+        self.ecodeof.start_timer()
+        self.ecodeof.switch_window.connect(self.show_password_manager)
+        self.ecodeof.switch_window2.connect(self.show_enter_backup_code)
+        self.ecodeof.show()
     
     def show_password_requirements(self) -> None:
         self.prequirements = PasswordRequirements_()
@@ -225,8 +226,9 @@ class Controller(object):
     def show_enter_backup_code(self) -> None:
         self.ebcode = EnterBackupCode_()
         self.ebcode.switch_window.connect(self.show_password_manager)
+        email = Path("modules", "user.txt").read_text()
         if fetch_2FA_type(email) == "Online":
-            self.ebcode.switch_window.connect(self.show_enter_code_online)
+            self.ebcode.switch_window2.connect(self.show_enter_code_online)
         else:
             self.ebcode.switch_window2.connect(self.show_enter_code_offline)
         self.ebcode.show()
@@ -243,11 +245,6 @@ class Controller(object):
         self.demo.show()
 
 if __name__ == "__main__":
-
-    path = Path("modules", "user.txt")
-    if not path.exists():
-        email = ""
-        path.write_text(email)
 
     # QApplication class manages the GUI application’s control flow and main settings.
     app = QtWidgets.QApplication(sys.argv)
