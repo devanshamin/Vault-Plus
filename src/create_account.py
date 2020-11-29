@@ -6,8 +6,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import src.images
 from utils.vaultplusDB import verify_email
 from utils.validate_password import pvalidate
-from src.password_requirements import PasswordRequirements
 from modules.registration import Registration
+from src.password_requirements import PasswordRequirements
 
 class CreateAnAccount(object):
     """Display GUI to the user creating a new account."""

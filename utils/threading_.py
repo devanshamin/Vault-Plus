@@ -5,7 +5,7 @@ from typing import Text, List
 
 from utils.logger import logger
 from utils.email import email_otp
-from utils.sequence import generate_otp, derive_code
+from utils.sequence import generate_code, derive_otp
 
 code = ''
 tflag = True
@@ -23,8 +23,8 @@ def counter(sequence: Text, user_email: Text) -> None:
     sequence = literal_eval(sequence)
     length = [len(s.split(' | ')) for s in sequence]
     while tflag:
-        otp = generate_otp(length)
-        code = derive_code(otp, sequence)
+        code = generate_code(length)
+        otp = derive_otp(code, sequence)
         email_otp(otp, user_email)
         start = time.time()
         elapsed = 0
@@ -100,7 +100,7 @@ def threads_start(sequence: Text, user_email: Text, user_code: Text) -> None:
     
     main_t1.start()
     main_t2.start()
-    
+
     main_t1.join()
     secondary_t1.join()
     

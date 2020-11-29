@@ -6,7 +6,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 import src.images
 from utils.vaultplusDB import fetch_sequence
-from utils.sequence import generate_otp, derive_code
+from utils.sequence import generate_code, derive_otp
 
 length = None
 
@@ -179,8 +179,8 @@ class EnterOtpOF(object):
         self.sequence = literal_eval(fetch_sequence(email))
         length = [len(s.split(' | ')) for s in self.sequence]
 
-        self.otp = generate_otp(length)
-        self.label_4.setText(self.otp.replace("-", " - "))
+        self.code = generate_code(length)
+        self.label_4.setText(self.code.replace("-", " - "))
 
         # Configuring separate thread
         self.counterThread = QtCore.QThread()
@@ -208,7 +208,7 @@ class EnterOtpOF(object):
         """Start the execution of the thread."""
 
         self.counter.count.connect(self.lcdNumber.display)
-        self.counter.new_otp.connect(self.label_4.setText)
+        self.counter.new_code.connect(self.label_4.setText)
         self.counter.stopped.connect(self.counterThread.wait)
         self.counterThread.started.connect(self.counter.start)
         self.counterThread.start()
@@ -225,16 +225,16 @@ class EnterOtpOF(object):
         icon.addPixmap(QtGui.QPixmap(":/newPrefix/new.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         msg.setWindowIcon(QtGui.QIcon(icon))
         msg.setIcon(QtWidgets.QMessageBox.Warning)
-        user_code = self.lineEdit_2.text()
-        user_code = user_code.upper().replace("-", "").replace(" ", "")
-        code = derive_code(self.otp, self.sequence)
-        if not user_code:
-            msg.setWindowTitle("Code")
+        user_otp = self.lineEdit_2.text()
+        user_otp = user_otp.upper().replace("-", "").replace(" ", "")
+        otp = derive_otp(self.code, self.sequence)
+        if not user_otp:
+            msg.setWindowTitle("Enter OTP")
             msg.setText("Please fill all fields.")
             msg.exec_()
-        elif user_code != code:
-            msg.setWindowTitle("Code")
-            msg.setText("Invalid code. Try again.")
+        elif user_otp != otp:
+            msg.setWindowTitle("Enter OTP")
+            msg.setText("Invalid OTP. Try again.")
             self.lineEdit_2.clear()
             msg.exec_()
         else:
@@ -244,7 +244,7 @@ class EnterOtpOF(object):
 class Counter(QtCore.QObject):
     """Class intended to be used in a separate thread to generate numbers and send them to another thread."""
 
-    new_otp = QtCore.pyqtSignal(str)
+    new_code = QtCore.pyqtSignal(str)
     count = QtCore.pyqtSignal(int)
     stopped = QtCore.pyqtSignal()
 
@@ -258,8 +258,8 @@ class Counter(QtCore.QObject):
         while True and not QtCore.QThread().isInterruptionRequested():
             x -= 1
             if x == 0:
-                otp = generate_otp(length)
-                self.new_otp.emit(otp.replace("-", " - "))
+                code = generate_code(length)
+                self.new_code.emit(code.replace("-", " - "))
                 x = 60
             self.count.emit(x)
             time.sleep(1)

@@ -8,31 +8,31 @@ from utils.adminDB import conn
 from utils.logger import logger
 from utils.pdf import PDF, encrypt_pdf
 
-def generate_otp(length: List[int]) -> Text:
-    """Generate a random OTP based on the length of user's sequence.
+def generate_code(length: List[int]) -> Text:
+    """Generate a random code based on the length of user's sequence.
     
     Args:
         length: List containing length of each part in the sequence.
     Returns:
-        A OTP.
+        A code.
     """
 
-    otp = []
+    code = []
     for part in length:
         part = list(range(part))
         random.shuffle(part)
         c = ''.join(map(str, [random.choice(part) for i in range(3)]))
-        otp.append(c)
-    return '-'.join(otp)
+        code.append(c)
+    return '-'.join(code)
 
-def derive_code(otp: Text, sequence: List[Text]) -> Text:
-    """Derive the code using the OTP and sequence.
+def derive_otp(code: Text, sequence: List[Text]) -> Text:
+    """Derive the OTP using the code and sequence.
     
     Args:
         otp: One Time Password.
         sequence: User's sequence.
     Returns:
-        A code. 
+        An OTP. 
     """
 
     # Convert parts of the sequence from string to dictionary.
@@ -41,12 +41,12 @@ def derive_code(otp: Text, sequence: List[Text]) -> Text:
         s = "{" + s.replace(" | ",",") + "}"
         dict_sequence.append(literal_eval(s))
 
-    code = []
-    pieces = otp.split('-')
+    otp = []
+    pieces = code.split('-')
     for i in range(len(pieces)):
         for c in pieces[i]:
-            code.append(dict_sequence[i][int(c)]) 
-    return ''.join(code)
+            otp.append(dict_sequence[i][int(c)]) 
+    return ''.join(otp)
 
 def generate() -> List[Text]:
     """Generate a random sequence.
