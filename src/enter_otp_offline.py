@@ -8,7 +8,7 @@ import src.images
 from utils.vaultplusDB import fetch_sequence
 from utils.sequence import generate_code, derive_otp
 
-length, flag = None, None
+length, code, flag = None, None, None
 
 class EnterOtpOF(object):
     """Display enter OTP (offline implementation) GUI to the user."""
@@ -20,7 +20,7 @@ class EnterOtpOF(object):
             Form: Object of QWidget.
         """
 
-        global length, flag
+        global length, code, flag
         Form.setObjectName("Form")
         Form.setWindowModality(QtCore.Qt.NonModal)
         Form.setEnabled(True)
@@ -179,8 +179,8 @@ class EnterOtpOF(object):
         self.sequence = literal_eval(fetch_sequence(email))
         length = [len(s.split(' | ')) for s in self.sequence]
 
-        self.code = generate_code(length)
-        self.label_4.setText(self.code.replace("-", " - "))
+        code = generate_code(length)
+        self.label_4.setText(code.replace("-", " - "))
 
         flag = True
 
@@ -230,7 +230,7 @@ class EnterOtpOF(object):
         msg.setIcon(QtWidgets.QMessageBox.Warning)
         user_otp = self.lineEdit_2.text()
         user_otp = user_otp.upper().replace("-", "").replace(" ", "")
-        otp = derive_otp(self.code, self.sequence)
+        otp = derive_otp(code, self.sequence)
         if not user_otp:
             msg.setWindowTitle("Enter OTP")
             msg.setText("Please fill all fields.")
@@ -272,6 +272,7 @@ class Counter(QtCore.QObject):
     def start(self) -> None:
         """Start the count down from 60 to 1 and emit each value to the GUI thread to display."""
 
+        global code
         x = 61
         while flag:
             x -= 1
