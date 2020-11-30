@@ -3,7 +3,6 @@ from pathlib import Path
 
 from PyQt5 import QtCore, QtWidgets
 
-from utils.threading_ import stop_execution
 from utils.vaultplusDB import fetch_2FA_type
 from src import (login, create_account, enter_otp_online,
                 enter_otp_offline, password_requirements, 
@@ -84,6 +83,7 @@ class EnterOtpON_(QtWidgets.QWidget, enter_otp_online.EnterOtpON):
         # First validate the user inputs and then display the next window.
         if self.validate():
             self.close()
+            self.counterThread.quit()
             self.switch_window.emit()
 
     def pushbutton2_handler(self) -> None:
@@ -141,10 +141,7 @@ class EnterBackupCode_(QtWidgets.QWidget, enter_backup_code.EnterBackupCode):
     def pushbutton2_handler(self) -> None:
         self.close()
         self.switch_window2.emit()
-    
-    def closeEvent(self, event) -> None:
-        stop_execution()
-
+        
 class PasswordManager_(QtWidgets.QWidget, password_manager.VaultPlus):
 
     # Switch window when "Delete" button is pressed inside "Delete account" tab.
@@ -214,6 +211,7 @@ class Controller(object):
     
     def show_enter_otp_online(self) -> None:
         self.ecodeon = EnterOtpON_()
+        self.ecodeon.start_timer()
         self.ecodeon.switch_window.connect(self.show_password_manager)
         self.ecodeon.switch_window2.connect(self.show_enter_backup_code)
         self.ecodeon.show()

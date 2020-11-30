@@ -7,11 +7,11 @@ from email.mime.multipart import MIMEMultipart
 
 from utils.logger import logger
 
-def email_otp(otp: Text, receiver_email: Text) -> None:
-    """Send an email containing the OTP.
+def email_code(code: Text, receiver_email: Text) -> None:
+    """Send an email containing the random code.
     
     Args:
-        otp: One Time Password.
+        code: A random 9-digit code.
         receiver_email: Receiver's email address.
     """
 
@@ -32,7 +32,7 @@ def email_otp(otp: Text, receiver_email: Text) -> None:
         <p><font size="15"> Your code is <b>{}</b> </font</p>
         </body>
         </html>
-        """.format(otp)
+        """.format(code)
     part = MIMEText(html, "html")
     message.attach(part)
     try:

@@ -8,7 +8,7 @@ import src.images
 from utils.vaultplusDB import fetch_sequence
 from utils.sequence import generate_code, derive_otp
 
-length = None
+length, flag = None, None
 
 class EnterOtpOF(object):
     """Display enter OTP (offline implementation) GUI to the user."""
@@ -20,7 +20,7 @@ class EnterOtpOF(object):
             Form: Object of QWidget.
         """
 
-        global length
+        global length, flag
         Form.setObjectName("Form")
         Form.setWindowModality(QtCore.Qt.NonModal)
         Form.setEnabled(True)
@@ -182,6 +182,8 @@ class EnterOtpOF(object):
         self.code = generate_code(length)
         self.label_4.setText(self.code.replace("-", " - "))
 
+        flag = True
+
         # Configuring separate thread
         self.counterThread = QtCore.QThread()
         self.counter = Counter()
@@ -209,7 +211,7 @@ class EnterOtpOF(object):
 
         self.counter.count.connect(self.lcdNumber.display)
         self.counter.new_code.connect(self.label_4.setText)
-        self.counter.stopped.connect(self.counterThread.wait)
+        #self.counter.stopped.connect(self.counterThread.wait)
         self.counterThread.started.connect(self.counter.start)
         self.counterThread.start()
     
@@ -220,6 +222,7 @@ class EnterOtpOF(object):
             True if the input is valid else False.
         """
         
+        global flag
         msg = QtWidgets.QMessageBox()
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/newPrefix/new.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -238,15 +241,30 @@ class EnterOtpOF(object):
             self.lineEdit_2.clear()
             msg.exec_()
         else:
+            flag = False
+            self.counterThread.exit()
             self.counterThread.quit()
+            self.counterThread.wait()
             return True
+    
+    def closeEvent(self, event) -> None:
+        """The event handler that receives close events.
+        
+        Args:
+            event: Contains a flag that indicates whether the user wants the widget to be closed or not.
+        """
+        
+        global flag
+        flag = False
+        self.counterThread.exit()
+        self.counterThread.quit()
+        self.counterThread.wait()
 
 class Counter(QtCore.QObject):
     """Class intended to be used in a separate thread to generate numbers and send them to another thread."""
 
     new_code = QtCore.pyqtSignal(str)
     count = QtCore.pyqtSignal(int)
-    stopped = QtCore.pyqtSignal()
 
     def __init__(self):
         super(Counter, self).__init__()
@@ -255,7 +273,7 @@ class Counter(QtCore.QObject):
         """Start the count down from 60 to 1 and emit each value to the GUI thread to display."""
 
         x = 61
-        while True and not QtCore.QThread().isInterruptionRequested():
+        while flag:
             x -= 1
             if x == 0:
                 code = generate_code(length)
@@ -263,5 +281,3 @@ class Counter(QtCore.QObject):
                 x = 60
             self.count.emit(x)
             time.sleep(1)
-        QtCore.QThread().requestInterruption()
-        self.stopped.emit()

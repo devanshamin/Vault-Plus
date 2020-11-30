@@ -1,5 +1,7 @@
+import time
 import threading
 from pathlib import Path
+from ast import literal_eval
 
 #pylint: disable=no-name-in-module
 from PyQt5 import QtCore, QtGui
@@ -8,8 +10,11 @@ from PyQt5.QtWidgets import (QWidget, QToolButton, QLineEdit, QPushButton,
 
 import src.images
 from utils.logger import logger
+from utils.email import email_code
 from utils.vaultplusDB import fetch_sequence
-from utils.threading_ import threads_start, verify, stop_execution
+from utils.sequence import generate_code, derive_otp
+
+flag, code, email, length = None, None, None, None
 
 class EnterOtpON(object):
     """Display enter OTP (online implementation) GUI to the user."""
@@ -21,6 +26,7 @@ class EnterOtpON(object):
             Form: Object of QWidget.
         """
 
+        global length, email, flag
         Form.setObjectName("Form")
         Form.setEnabled(True)
         Form.setFixedSize(342, 403)
@@ -129,13 +135,16 @@ class EnterOtpON(object):
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
-        try:
-            email = Path("modules", "user.txt").read_text()
-            sequence = fetch_sequence(email)
-            t1 = threading.Thread(target=threads_start, args=(sequence , email, 'Test',))
-            t1.start()
-        except: 
-            logger.error("Error occurred during execution of threads!", exc_info=True)
+        email = Path("modules", "user.txt").read_text()
+        self.sequence = literal_eval(fetch_sequence(email))
+        length = [len(s.split(' | ')) for s in self.sequence]
+
+        flag = True
+
+        # Configuring separate thread
+        self.counterThread = QtCore.QThread()
+        self.counter = Counter()
+        self.counter.moveToThread(self.counterThread)
 
     def retranslateUi(self, Form: QWidget) -> None:
         """Sets the text and titles of the widgets.
@@ -152,6 +161,12 @@ class EnterOtpON(object):
         self.pushbutton2.setText(_translate("Form", "Forgot/Lost Sequence?"))
         self.label_2.setText(_translate("Form", "Enter OTP:"))
 
+    def start_timer(self) -> None:
+        """Start the execution of the thread."""
+
+        self.counterThread.started.connect(self.counter.start)
+        self.counterThread.start()
+
     def validate(self) -> bool:
         """Validate the input provided by the user.
         
@@ -159,22 +174,60 @@ class EnterOtpON(object):
             True if the input is valid else False.
         """
 
+        global flag
         msg = QMessageBox()
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/newPrefix/new.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         msg.setWindowIcon(QtGui.QIcon(icon))
         msg.setIcon(QMessageBox.Warning)
-        user_code = self.lineEdit_2.text()
-        user_code = user_code.upper().replace("-", "").replace(" ", "")
-        if not user_code:
-            msg.setWindowTitle("Code")
+        user_otp = self.lineEdit_2.text()
+        user_otp = user_otp.upper().replace("-", "").replace(" ", "")
+        otp = derive_otp(code, self.sequence)
+        if not user_otp:
+            msg.setWindowTitle("Enter OTP")
             msg.setText("Please fill all fields.")
             msg.exec_()
-        elif not verify(user_code):
-            msg.setWindowTitle("Code")
-            msg.setText("Invalid code. Try again.")
+        elif user_otp != otp:
+            msg.setWindowTitle("Enter OTP")
+            msg.setText("Invalid OTP. Try again.")
             self.lineEdit_2.clear()
             msg.exec_()
         else:
-            stop_execution()
+            flag = False
+            self.counterThread.exit()
+            self.counterThread.quit()
+            self.counterThread.wait()
             return True
+
+    def closeEvent(self, event) -> None:
+        """The event handler that receives close events.
+        
+        Args:
+            event: Contains a flag that indicates whether the user wants the widget to be closed or not.
+        """
+        
+        global flag
+        flag = False
+        self.counterThread.exit()
+        self.counterThread.quit()
+        self.counterThread.wait()
+
+class Counter(QtCore.QObject):
+    """Class intended to be used in a separate thread to generate numbers and send them to another thread."""
+
+    def __init__(self):
+        super(Counter, self).__init__()
+
+    def start(self) -> None:
+        """Start the 60 seconds timer and email a random code every 60 seconds."""
+
+        global code
+        while flag:
+            code = generate_code(length)
+            email_code(code, email)
+            start = time.time()
+            elapsed = 0
+            seconds = 60
+            while elapsed < seconds and flag:
+                elapsed = time.time() - start
+                time.sleep(1)
