@@ -1,3 +1,4 @@
+import shutil
 from pathlib import Path
 from ast import literal_eval
 
@@ -500,13 +501,16 @@ class VaultPlus(object):
             if validate_mp(self.email, password):
                 msg.setWindowTitle("Delete account")
                 msg.setText("Are you sure you want delete your account?")
-                msg.setInformativeText("Deleting your account cannot be undone; you will no longer have access to any data you have stored in Vault Plus.")
+                msg.setInformativeText("Deleting your account cannot be undone-you will no longer have access to any data you have stored in Vault Plus.")
                 msg.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
                 msg.setDefaultButton(QtWidgets.QMessageBox.No)
                 reply = msg.exec()
                 if reply == QtWidgets.QMessageBox.Yes:
                     vaultplusDB.delete_user(self.email)
                     adminDB.delete_user(self.email)
+                    path = Path("users", self.uid[1:])
+                    if path.exists():
+                        shutil.rmtree(path)
                     return True
 
     def log_out(self) -> None:
