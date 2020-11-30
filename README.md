@@ -18,7 +18,7 @@ In this implementation, the user will receive a random 9-digit code via email, a
 
 In this implementation, the OTP will be shown within the application instead of sending it to the user via email. Generating the random codes within the application `improves usability`.
 
-[![](https://img.youtube.com/vi/dOYq6d9cla4/0.jpg)](https://youtu.be/dOYq6d9cla4)
+![](docs/gifs/offline2FA.gif)
 
 ## Architecture
 
