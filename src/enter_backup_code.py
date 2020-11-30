@@ -166,6 +166,6 @@ class EnterBackupCode(object):
                 self.Form.close()
                 msg.setIcon(QMessageBox.Information)
                 msg.setWindowTitle("Backup code")
-                msg.setText("Backup codes have been updated. Go to 'Backup codes' section and view your updated backup codes.")
+                msg.setText("Backup codes have been updated. Go to 'Backup codes' section and download the text file containing the new backup codes.")
                 msg.exec_()
                 return True
