@@ -12,6 +12,7 @@ class PasswordRequirements(object):
 
         Form.setObjectName("Form")
         Form.setFixedSize(301, 200)
+        #Form.setFixedSize(301, 230)
         #Form.move(281, 211)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/newPrefix/new.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -31,6 +32,7 @@ class PasswordRequirements(object):
             )
         self.textBrowser_2 = QtWidgets.QTextBrowser(Form)
         self.textBrowser_2.setGeometry(QtCore.QRect(10, 10, 281, 180))
+        #self.textBrowser_2.setGeometry(QtCore.QRect(10, 10, 281, 211))
         self.textBrowser_2.setStyleSheet("")
         self.textBrowser_2.setObjectName("textBrowser_2")
 

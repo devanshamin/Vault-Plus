@@ -14,11 +14,13 @@ class Demo(object):
         
         Form.setObjectName("Form")
         Form.setFixedSize(463, 590)
+        #Form.setFixedSize(580, 669)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/newPrefix/new.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Form.setWindowIcon(icon)
         self.textBrowser_2 = QtWidgets.QTextBrowser(Form)
         self.textBrowser_2.setGeometry(QtCore.QRect(10, 10, 441, 571))
+        #self.textBrowser_2.setGeometry(QtCore.QRect(10, 10, 561, 651))
         self.textBrowser_2.setStyleSheet(
             "color: rgb(255, 255, 255);\n"
             "font-family:Calibri;\n"
