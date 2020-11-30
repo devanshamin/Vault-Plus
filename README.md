@@ -7,14 +7,16 @@ More details can be found in the [paper](https://link.springer.com/chapter/10.10
 > Note: Vault Plus encrypts user passwords but it doesn't encrypt the database. The database encryption functionality will be provided in the future.
 
 There are two ways of using this 2FA method:
-
 1. Online
+2. Offline
+
+## Online implementation
 
 In this implementation, the user will receive a random 9-digit code via email, and then the user will use the code and their sequence to derive an OTP and use that OTP for authentication. Every 60 seconds a new randomly generated code is sent. Sending the random codes to the email address of the user `increases security`.
 
-[![](https://img.youtube.com/vi/H9cQvcBn-_M/0.jpg)](https://youtu.be/H9cQvcBn-_M)
+![](docs/gifs/online2FA.gif)
 
-2. Offline
+## Offline implementation
 
 In this implementation, the OTP will be shown within the application instead of sending it to the user via email. Generating the random codes within the application `improves usability`.
 
