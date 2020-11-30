@@ -142,7 +142,7 @@ class CreateAnAccount(object):
         self.radioButton_2 = QtWidgets.QRadioButton(self.frame)
         self.radioButton_2.setGeometry(QtCore.QRect(260, 260, 81, 41))
         self.radioButton_2.setObjectName("radioButton_2")
-        self.radioButton_2.setToolTip("OTP is shown within the GUI")
+        self.radioButton_2.setToolTip("OTP is shown within the application")
         self.toolButton_2 = QtWidgets.QToolButton(self.centralwidget)
         self.toolButton_2.setGeometry(QtCore.QRect(160, 10, 81, 81))
         self.toolButton_2.setStyleSheet("")
