@@ -33,7 +33,7 @@ In this implementation, the 9-digit random code will be shown within the applica
 
 ### Windows
 
-Open Anaconda Prompt and create a conda environment using following command:
+Open Anaconda Prompt and create a conda environment using the following command:
 
 ```
 conda env create -f environment.yaml
@@ -61,9 +61,9 @@ cd VaultPlus
 python main.py
 ```
 
-## TODO
+## To DO
 
-- [] Support for encrypting the database (.db) files using SQLCipher.
+- [ ] Support for encrypting the database (.db) files using SQLCipher.
 
 ## License
 
