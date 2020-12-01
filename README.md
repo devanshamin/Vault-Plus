@@ -22,13 +22,9 @@ In this implementation, the OTP will be shown within the application instead of 
 
 ![](docs/gifs/offline2FA.gif)
 
-## Architecture
-
-![](docs/images/architecture.png)
-
 ## Technical Details
 
 * The GUI (Graphical User Interface) application is made using `PyQt5`.
 * The database used is `SQLite`.
-* The master password is encrypted using `SHA256`.
+* The user's master password is encrypted using `SHA256`.
 * The user's password for a service (i.e. Amazon, Google etc.) is encrypted using `AES256`.
