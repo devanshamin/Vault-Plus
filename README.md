@@ -61,9 +61,9 @@ cd VaultPlus
 python main.py
 ```
 
-## To DO
+## To Do
 
-- [ ] Support for encrypting the database (.db) files using SQLCipher.
+- [ ] Support for encrypting the database (.db) files using [SQLCipher](https://www.zetetic.net/sqlcipher/).
 
 ## License
 
