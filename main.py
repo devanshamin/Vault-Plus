@@ -243,7 +243,10 @@ class Controller(object):
         self.ebcode.show()
     
     def show_sequence_info(self) -> None:
-        self.prequirements.close()
+        try:
+            self.prequirements.close()
+        except:
+            pass
         self.seqin = SequenceInfo_()
         self.seqin.switch_window.connect(self.show_demo)
         self.seqin.switch_window2.connect(self.show_password_manager)

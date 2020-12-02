@@ -15,12 +15,16 @@ def email_code(code: Text, receiver_email: Text) -> None:
         receiver_email: Receiver's email address.
     """
 
+    e = "Please enter your email address and password in 'config.json'. Note: Email address and password are required to send an OTP via email for online 2FA."
     try:
         config = json.loads(Path("config.json").read_text())
         sender_email = config["email"]
         password = config["password"]
     except:
-        raise Exception("Please enter your email and password in 'config.json'. Note: Email and password are required to send an OTP via email for 2FA.")
+        raise Exception(e)
+    
+    if not sender_email or not password:
+        raise Exception(e)
 
     message = MIMEMultipart()
     message['Subject'] = "One Time Password (OTP)"
@@ -36,6 +40,8 @@ def email_code(code: Text, receiver_email: Text) -> None:
     part = MIMEText(html, "html")
     message.attach(part)
     try:
+        # Note: 587 smtp port worked for me. If it doesn't work for you, 
+        # you will have to tweak the smtp port to get yours to work.
         s = smtplib.SMTP("smtp.gmail.com", 587)
         s.starttls()
         s.login(sender_email, password)
