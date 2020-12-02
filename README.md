@@ -10,15 +10,15 @@ There are two ways of using this 2FA method:
 1. Online
 2. Offline
 
-## Online Implementation
+## Online Version
 
-In this implementation, the user will receive a 9-digit random code via email, and then the user will use the code and their sequence to derive an OTP and use that OTP for authentication. After every 60 seconds, a new randomly generated code is sent. Sending the random codes to the email address of the user `increases security`. Click [here](https://youtu.be/81jn8GlU5dU) to see the full demo.
+In this version, the user will receive a random 9-digit code via email, and then the user will use the code and their sequence to derive an OTP and use that OTP for authentication. A new randomly generated code is sent every 60 seconds. Sending the random codes to the email address of the user `increases security`. Click [here](https://youtu.be/81jn8GlU5dU) to see the full demo.
 
 ![](docs/gifs/online2FA.gif)
 
-## Offline Implementation
+## Offline Version
 
-In this implementation, the 9-digit random code will be shown within the application. After every 60 seconds, the code will be updated. Generating the random codes within the application `improves usability`. Click [here](https://youtu.be/8ZUJ1yRRsYM) to see the full demo.
+In this version, a random 9-digit code is shown within the application. This code is updated every 60 seconds. Generating the random codes within the application `improves usability`. Click [here](https://youtu.be/8ZUJ1yRRsYM) to see the full demo.
 
 ![](docs/gifs/offline2FA.gif)
 
