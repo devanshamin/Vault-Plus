@@ -39,7 +39,7 @@ Open Anaconda Prompt and create a conda environment using the following command:
 conda env create -f environment.yaml
 ```
 
-For using an online implementation of this 2FA method, you'll need to enter your email address and password to the `config.json` file and do the following:
+For using an online implementation of this 2FA method, you'll need to enter your email address and password to the `config.json` file. If you're using Gmail as the provider, you'll need to tell Google to allow you to connect via SMTP.For many other email providers, you won't need to do any of the extra steps that I describe here.
 
 * You'll need to turn on allow less secure apps to access your account. For detailed instructions on how to do this, you should check out this [page](https://support.google.com/accounts/answer/6010255).
 
