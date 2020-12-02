@@ -50,14 +50,14 @@ For using an online implementation of this 2FA method, you'll need to enter your
 1. Clone this repository. 
 
 ```
-git clone https://github.com/devanshamin/VaultPlus.git
+git clone https://github.com/devanshamin/Vault-Plus.git
 ```
 
 2. Open Anaconda Prompt and type the following commands. 
 
 ```
 conda activate vaultplus
-cd VaultPlus
+cd Vault-Plus-main
 python main.py
 ```
 
