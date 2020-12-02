@@ -57,7 +57,7 @@ git clone https://github.com/devanshamin/Vault-Plus.git
 
 ```
 conda activate vaultplus
-cd Vault-Plus-main
+cd Vault-Plus
 python main.py
 ```
 
