@@ -12,13 +12,13 @@ There are two ways of using this 2FA method:
 
 ## Online Implementation
 
-In this implementation, the user will receive a 9-digit random code via email, and then the user will use the code and their sequence to derive an OTP and use that OTP for authentication. After every 60 seconds, a new randomly generated code is sent. Sending the random codes to the email address of the user `increases security`. [Click here](https://youtu.be/81jn8GlU5dU) to see the full demo.
+In this implementation, the user will receive a 9-digit random code via email, and then the user will use the code and their sequence to derive an OTP and use that OTP for authentication. After every 60 seconds, a new randomly generated code is sent. Sending the random codes to the email address of the user `increases security`. Click [here](https://youtu.be/81jn8GlU5dU) to see the full demo.
 
 ![](docs/gifs/online2FA.gif)
 
 ## Offline Implementation
 
-In this implementation, the 9-digit random code will be shown within the application. After every 60 seconds, the code will be updated. Generating the random codes within the application `improves usability`. [Click here](https://youtu.be/8ZUJ1yRRsYM) to see the full demo.
+In this implementation, the 9-digit random code will be shown within the application. After every 60 seconds, the code will be updated. Generating the random codes within the application `improves usability`. Click [here](https://youtu.be/8ZUJ1yRRsYM) to see the full demo.
 
 ![](docs/gifs/offline2FA.gif)
 
@@ -53,7 +53,7 @@ For using an online implementation of this 2FA method, you'll need to enter your
 git clone https://github.com/devanshamin/VaultPlus.git
 ```
 
-2. Open Anaconda Prompt and type following commands. 
+2. Open Anaconda Prompt and type the following commands. 
 
 ```
 conda activate vaultplus
