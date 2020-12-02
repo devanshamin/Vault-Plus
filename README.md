@@ -63,7 +63,7 @@ python main.py
 
 ## To Do
 
-- [ ] Support for encrypting the database (.db) files using [SQLCipher](https://www.zetetic.net/sqlcipher/).
+- [ ] Support for encrypting the database (.db) files.
 
 ## License
 
